@@ -10,9 +10,9 @@ This is a mac only application developed natively in swift. Thus its very CPU ef
 
 This app has been tested on macOS Sierra and macOS High Sierra, but should also work in prior versions of macOS.
 
-1. Download the app from [here](https://github.com/simonmeusel/StatusBarRun/releases)
+1. Download the app from [here](https://github.com/insuns/StatusBarRun/releases)
 2. Execute the app once
-3. Click on the R on the top left of your screen and select the menu item `Edit items` to edit your [config](https://github.com/simonmeusel/StatusBarRun#configuration)
+3. Click on the R on the top left of your screen and select the menu item `Edit items` to edit your [config](https://github.com/insuns/StatusBarRun#configuration)
 4. To add this app to the **startup** simply drag it into your login items (System Preferences -> Users & Groups -> Current User -> **Login Items**) and tick the checkbox
 
 ## Configuration
