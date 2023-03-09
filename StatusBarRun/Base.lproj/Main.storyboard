@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -15,21 +15,33 @@
                 </customObject>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="StatusBarRun" customModuleProvider="target"/>
-                <menuItem title="StatusBarRun" id="6IM-gn-lWI">
+                <menuItem title="Setting" image="NSSmartBadgeTemplate" id="6IM-gn-lWI">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="StatusBarRun" id="b7s-jU-Eaj">
+                    <menu key="submenu" title="Setting" id="b7s-jU-Eaj">
                         <items>
-                            <menuItem title="Start on login" id="1QM-oo-vod">
+                            <menuItem title="Edit config" image="pencil.line" catalog="system" id="1yH-BJ-ACd">
                                 <modifierMask key="keyEquivalentModifierMask"/>
-                                <menu key="submenu" title="Start on login" id="QKI-Ph-eOV">
+                                <connections>
+                                    <action selector="editConfig:" target="Px5-5D-Ene" id="eMK-xr-rqV"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Reload config" image="NSRefreshTemplate" id="JFL-iv-tQL">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="reloadConfig:" target="Px5-5D-Ene" id="iWj-G6-Sy5"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Launch at login" image="person.circle" catalog="system" hidden="YES" enabled="NO" id="1QM-oo-vod">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Launch at login" id="QKI-Ph-eOV">
                                     <items>
-                                        <menuItem title="Add to login items" id="ihb-Mr-lCH">
+                                        <menuItem title="On" image="person.fill.checkmark" catalog="system" enabled="NO" id="ihb-Mr-lCH">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="enableLoginItem:" target="Px5-5D-Ene" id="Ln9-S5-I0L"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Remove from login items" id="Ffl-ry-H2f">
+                                        <menuItem title="Off" image="person.fill.xmark" catalog="system" enabled="NO" id="Ffl-ry-H2f">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="disableLoginItem:" target="Px5-5D-Ene" id="zBa-uf-cAc"/>
@@ -38,19 +50,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="✎ Edit config" id="1yH-BJ-ACd">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="editConfig:" target="Px5-5D-Ene" id="eMK-xr-rqV"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="⟲ Reload config" id="JFL-iv-tQL">
-                                <modifierMask key="keyEquivalentModifierMask"/>
-                                <connections>
-                                    <action selector="reloadConfig:" target="Px5-5D-Ene" id="iWj-G6-Sy5"/>
-                                </connections>
-                            </menuItem>
-                            <menuItem title="⊗ Quit" id="qJr-9E-iqo">
+                            <menuItem title="Quit" image="NSFollowLinkFreestandingTemplate" id="qJr-9E-iqo">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="quit:" target="Px5-5D-Ene" id="ufy-hd-lZs"/>
@@ -69,4 +69,13 @@
             <point key="canvasLocation" x="75" y="0.0"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="NSFollowLinkFreestandingTemplate" width="20" height="20"/>
+        <image name="NSRefreshTemplate" width="18" height="21"/>
+        <image name="NSSmartBadgeTemplate" width="14" height="14"/>
+        <image name="pencil.line" catalog="system" width="16" height="13"/>
+        <image name="person.circle" catalog="system" width="15" height="15"/>
+        <image name="person.fill.checkmark" catalog="system" width="19" height="14"/>
+        <image name="person.fill.xmark" catalog="system" width="19" height="14"/>
+    </resources>
 </document>

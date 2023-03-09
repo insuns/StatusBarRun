@@ -117,3 +117,9 @@ function // Any function key
 ## Uninstallation
 
 To uninstall StatusBarRun simply delete the StatusBarRun.app and the config file (`rm ~/.status-bar-run.json`), THATS IT!
+
+
+## Development
+1. install carthage, run `brew update && brew install carthage`
+
+2. update dependency, run `carthage update --platform macosx`

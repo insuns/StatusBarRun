@@ -49,7 +49,7 @@ class StatusMenuController: NSObject, NSApplicationDelegate {
     }
     
     override func awakeFromNib() {
-        statusItem.title = "R"
+        statusItem.button?.title = "R"
         statusItem.menu = statusMenu
         hotkeyManager = HotkeyManager(statusMenuController: self)
         updateMenu()
