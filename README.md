@@ -38,8 +38,9 @@ Example:
 This Example registers a item named `Greet` which runs the command `say hi` in `/bin/sh`. It can also be triggered by pressing `command + option + g`
 
 ```json
-{
-    "Greet": {
+[
+    {
+        "title": "Greet",
         "launchPath": "/bin/sh",
         "arguments": ["-c", "say hi"],
         "hotkey": {
@@ -47,14 +48,15 @@ This Example registers a item named `Greet` which runs the command `say hi` in `
             "modifiers": ["command", "option"]
         }
     }
-}
+]
 ```
 
 Second example:
 
 ```json
-{
-    "Week": {
+[
+    {
+        "title": "Week",
         "label": {
             "launchPath": "/bin/sh",
             "arguments": ["-c", "date '+%V'"],
@@ -64,14 +66,16 @@ Second example:
         "launchPath": "/bin/sh",
         "arguments": ["-c", "open /Applications/Calendar.app"]
     },
-    "Fortune": {
+    {
+        "title": "Fortune",
         "launchPath": "/bin/sh",
         "arguments": [
             "-c",
             "say -v Samantha $('/usr/local/Cellar/fortune/9708/bin/fortune' -s)"
         ]
     },
-    "Remove formatting of clipboard": {
+    {
+        "title": "Remove formatting of clipboard",
         "hotkey": {
             "key": "g",
             "modifiers": ["command", "option"]
@@ -79,20 +83,25 @@ Second example:
         "launchPath": "/bin/sh",
         "arguments": ["-c", "pbpaste | pbcopy"]
     },
-    "Web proxy": {
-        "On": {
-            "launchPath": "/bin/sh",
-            "arguments": [
-                "-c",
-                "networksetup -setwebproxy \"Wi-Fi\" 1.2.3.4 1234 off && networksetup -setwebproxystate \"Wi-Fi\" on"
-            ]
-        },
-        "Off": {
-            "launchPath": "/bin/sh",
-            "arguments": ["-c", "networksetup -setwebproxystate \"Wi-Fi\" off"]
-        }
+    {
+        "title": "Web proxy",
+        "children" : [
+            {
+                "title": "On",
+                "launchPath": "/bin/sh",
+                "arguments": [
+                    "-c",
+                    "networksetup -setwebproxy 'Wi-Fi' 127.0.0.1 8080 && networksetup -setsecurewebproxy 'Wi-Fi' 127.0.0.1 8080"
+                ]
+            },
+            {
+                "title": "Off",
+                "launchPath": "/bin/sh",
+                "arguments": ["-c", "networksetup -setwebproxystate 'Wi-Fi' off && networksetup -setsecurewebproxystate 'Wi-Fi' off"]
+            }
+        ]
     }
-}
+]
 ```
 
 After modifying the config you have to either restart the program or reload the config (StatusBarRun -> Reload Config).

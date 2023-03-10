@@ -49,7 +49,11 @@ class StatusMenuController: NSObject, NSApplicationDelegate {
     }
     
     override func awakeFromNib() {
-        statusItem.button?.title = "R"
+//        statusItem.button?.title = "R"
+//        statusItem.button?.image = NSImage(named: "AppIcon")
+        if let button = statusItem.button {
+            button.image = NSImage(named: "StatusIcon");
+        }
         statusItem.menu = statusMenu
         hotkeyManager = HotkeyManager(statusMenuController: self)
         updateMenu()
@@ -61,40 +65,45 @@ class StatusMenuController: NSObject, NSApplicationDelegate {
         hotkeyManager!.hotkeys = []
         
         // Load items from config
-        let data = Config.load()
+        let data = Config.load();
         // Clear items in menu
-        statusMenu.removeAllItems()
+        statusMenu.removeAllItems();
+        
         // Add items to menu
-        for (title, options) : (String, JSON) in data {
-            statusMenu.addItem(generateMenu(title: title, options: options, nesting: 1))
+        for (_, items) : (String, JSON) in data {
+            statusMenu.addItem(generateMenu(items: items, nesting: 1))
         }
+        statusMenu.addItem(.separator());
         // Add status bar run sub menu
         statusMenu.addItem(statusBarRunMenuItem)
     }
     
-    func generateMenu(title: String, options: JSON, nesting: Int) -> NSMenuItem {
-        if (options["launchPath"] == JSON.null) {
+    func generateMenu(items: JSON, nesting: Int) -> NSMenuItem {
+        if (items["launchPath"] == JSON.null) {
+            checkCfg(items: items, mustHasChildren: true)
             // MenuItem with submenu
-            let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
-            item.submenu = NSMenu(title: title)
-            for (nestedTitle, nestedOptions) : (String, JSON) in options {
-                item.submenu?.addItem(generateMenu(title: nestedTitle, options: nestedOptions, nesting: nesting + 1))
+            let menuItem = NSMenuItem(title: items["title"].stringValue, action: nil, keyEquivalent: "")
+            menuItem.submenu = NSMenu(title: items["title"].stringValue)
+            for (_, subItems) : (String, JSON) in items["children"] {
+                menuItem.submenu?.addItem(generateMenu(items: subItems, nesting: nesting + 1))
             }
-            return item;
+            return menuItem;
         } else {
+            checkCfg(items: items, mustHasChildren: false);
+            
             // MenuItem without submenu
-            let prefixedTitle = getPrefix(nesting: nesting) + title.replacingOccurrences(of: zeroWidthSpace, with: "");
+            let prefixedTitle = getPrefix(nesting: nesting) + items["title"].stringValue.replacingOccurrences(of: zeroWidthSpace, with: "");
             // Save action
-            map[prefixedTitle] = options
+            map[prefixedTitle] = items
             // Create item
-            let item = NSMenuItem(title: prefixedTitle, action: #selector(StatusMenuController.run(sender:)), keyEquivalent: "")
-            item.target = self
+            let menuItem = NSMenuItem(title: prefixedTitle, action: #selector(StatusMenuController.run(sender:)), keyEquivalent: "")
+            menuItem.target = self
             // Create hotkey
-            if (options["hotkey"] != JSON.null) {
-                hotkeyManager!.registerHotkey(hotkeyOptions: options["hotkey"], item: item)
+            if (items["hotkey"] != JSON.null) {
+                hotkeyManager!.registerHotkey(hotkeyOptions: items["hotkey"], item: menuItem)
             }
-            if (options["label"] != JSON.null) {
-                let labelOptions = options["label"];
+            if (items["label"] != JSON.null) {
+                let labelOptions = items["label"];
                 runProcess(options: labelOptions, terminationHandler: {(label) -> Void in
                     var text = label
                     let trimOutput = labelOptions["trimOutput"]
@@ -107,10 +116,11 @@ class StatusMenuController: NSObject, NSApplicationDelegate {
                         
                         text = text.trimmingCharacters(in: CharacterSet(charactersIn: characters))
                     }
-                    item.title = labelOptions["prefix"].stringValue + text + labelOptions["suffix"].stringValue;
+                    menuItem.title = labelOptions["prefix"].stringValue + text + labelOptions["suffix"].stringValue;
                 })
             }
-            return item;
+
+            return menuItem;
         }
     }
     
@@ -150,4 +160,37 @@ class StatusMenuController: NSObject, NSApplicationDelegate {
         }
         process.launch()
     }
+    
+    func showAlert(title:String, message:String, quit: Bool) {
+        let alert: NSAlert = NSAlert();
+        alert.messageText = title.isEmpty ? "Alert" : title;
+        alert.informativeText = message;
+        alert.alertStyle = NSAlert.Style.warning;
+        alert.addButton(withTitle: "Ok");
+        alert.runModal();
+        
+        if(quit){
+            NSApplication.shared.terminate(self);
+        }
+    }
+    
+    ///
+    /// check the config
+    func checkCfg(items:JSON, mustHasChildren:Bool){
+        if items["title"] == JSON.null {
+            showAlert(title: "The config file is invalid", message: "title attribute missing", quit: true);
+        }
+        if(mustHasChildren && items["children"] == JSON.null){
+            showAlert(title: "The config file is invalid", message: "children attribute missing: you must set launchPath attr or children attr", quit: true);
+        }
+    }
+    
+//    @available(OSX 10.15, *)
+//    func openTerminal(at url: URL?){
+//        guard let url = url,
+//              let appUrl = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.Terminal")
+//        else { return }
+//
+//        NSWorkspace.shared.open([url], withApplicationAt: appUrl, configuration: NSWorkspace.OpenConfiguration() )
+//    }
 }
